@@ -55,6 +55,11 @@ namespace RedisDemo
             }
         }
 
+        public async Task<bool> FastInsertDbEntities<T>(string keyName, T obj) where T : class
+        {   
+            return await _db.StringSetAsync(keyName, JsonSerializer.Serialize(obj));
+        }
+
         public async Task<T> GetDbEntities<T>(string keyName) where T : class
         {
             var response = await _db.StringGetAsync(keyName);

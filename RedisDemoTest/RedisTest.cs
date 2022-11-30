@@ -44,18 +44,31 @@ namespace RedisDemoTest
         }
 
         [Fact]
-        public async Task MassiveInsertObjectAsync()
+        public void InsertObjectAsync()
         {
-            var parallelTask = Parallel.For(0, 100, async (i) =>
+            var parallelTask = Parallel.For(0, 100, (i) =>
             {
                 var obj = new DumbObject();
                 obj.Counter = i;
                 obj.LstUpdt = DateTime.UtcNow;
-                _service.InsertDbEntities($"test", obj);
+                _service.InsertDbEntities($"test{i}", obj);
             });
             Assert.True(parallelTask.IsCompleted);
-            var obj = await _service.GetDbEntities<DumbObject>("test");
-            Assert.True(obj.Counter == 99);
+        }
+
+        [Fact]
+        public void MassiveInsertObjectAsync()
+        {
+            var check = true;
+            var parallelTask = Parallel.For(0, 100000, async (i) =>
+            {
+                var obj = new DumbObject();
+                obj.Counter = i;
+                obj.LstUpdt = DateTime.UtcNow;
+                check &= await _service.FastInsertDbEntities($"test{i}", obj);
+            });
+            Assert.True(parallelTask.IsCompleted);
+            Assert.True(check);
         }
 
         [Fact]
@@ -79,17 +92,25 @@ namespace RedisDemoTest
             Assert.Null(newObj);
         }
 
-        [Fact]
-        public async Task UpdateObjectAsync()
-        {
-            DumbObject obj = await _service.GetDbEntities<DumbObject>("test");
+        //[Fact]
+        //public async Task UpdateObjectAsync()
+        //{
+        //    DumbObject obj = await _service.GetDbEntities<DumbObject>("test");
 
-        }
+        //}
 
         [Fact]
-        public async Task GetAllKeysTestAsync()
+        public void GetAllKeysTestAsync()
         {
             var response = _service.GetAllDbEntities<DumbObject>();
+        }
+
+        M5UXCR1
+
+        [Fact]
+        public void DeleteAllKeys()
+        {
+            _service.DeleteAllKeys();
         }
     }
 }
