@@ -105,8 +105,6 @@ namespace RedisDemoTest
             var response = _service.GetAllDbEntities<DumbObject>();
         }
 
-        M5UXCR1
-
         [Fact]
         public void DeleteAllKeys()
         {
