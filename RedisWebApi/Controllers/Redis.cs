@@ -5,7 +5,7 @@ using RedisWebApi.Models;
 
 namespace RedisWebApi.Controllers
 {
-    [Route("api/[controller]/[action]")]
+    [Route("api/[controller]")]
     public class Redis : Controller
     {
         private readonly RedisService _service;
@@ -40,7 +40,7 @@ namespace RedisWebApi.Controllers
             }
         }
 
-        [HttpPost("{objname}")]
+        [HttpDelete("{objname}")]
         public ActionResult Delete([FromRoute] string objname)
         {
             try
